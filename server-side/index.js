@@ -1,3 +1,4 @@
+const { PatientClass, DoctorClass, AppointmentClass, MedicalReportClass, Manager } = require('./classes');
 
 const express = require('express');
 const cors = require('cors');
