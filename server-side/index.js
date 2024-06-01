@@ -371,5 +371,5 @@ app.post('/deletePatient'), authenticateToken, (req, res) => {
 
 
 app.listen(port, () => {
-    console.log("htpps Server Started in port:" + port);
+    console.log("htpp Server Started in port:" + port);
 });

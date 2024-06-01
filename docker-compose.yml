@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server-side
+    ports:
+      - "4444:4444"
+    volumes:
+      - ./server-side:/usr/src/app
+      - /usr/src/app/node_modules
+
+    command: npm run dev
+
+  react:
+    build:
+      context: ./react-side
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./react-side:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev
