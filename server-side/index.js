@@ -3,7 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const { host, database, password, user, port, secretKey } = require('./config.json')
 const mysql = require('mysql2');
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const saltRaunds = 10;
 
 const app = express();
 app.use(cors());
@@ -16,6 +18,18 @@ const connection = mysql.createConnection({
     user: user
 });
 
+
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, secretKey, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+};
 
 connection.connect((err) => {
     if (err) {
@@ -31,7 +45,7 @@ connection.connect((err) => {
 
 app.post('/addPatient', authenticateToken, async (req, res) => {
     const { name, surName, password, birthDate, gender, phoneNumber, address } = req.body;
-
+    const hashedPassword = await bcrypt.hash(password, saltRaunds)
     const patient = new PatientClass(connection, name, surName, hashedPassword, birthDate, gender, phoneNumber, address);
     patient.addToDatabase();
     res.status(200).json({ status: "ok" });
@@ -39,7 +53,7 @@ app.post('/addPatient', authenticateToken, async (req, res) => {
 });
 app.post('/registerPatient', async (req, res) => {
     const { name, surName, password, birthDate, gender, phoneNumber, address } = req.body;
-
+    const hashedPassword = await bcrypt.hash(password, saltRaunds)
     const patient = new PatientClass(connection, name, surName, hashedPassword, birthDate, gender, phoneNumber, address);
     patient.addToDatabase();
     res.status(200).json({ status: "ok" });
@@ -51,7 +65,7 @@ app.post('/registerPatient', async (req, res) => {
 
 app.post('/addDoctor', authenticateToken, async (req, res) => {
     const { name, surName, password, specialization, hospital } = req.body;
-
+    const hashedPassword = await bcrypt.hash(password, saltRaunds)
     const doctor = new DoctorClass(connection, name, surName, hashedPassword, specialization, hospital);
     doctor.addToDatabase();
     res.status(200).json({ status: "ok" });
@@ -100,8 +114,9 @@ app.post('/checkLogin', (req, res) => {
         connection.query('SELECT * FROM persons p JOIN patients pt ON p.personID = pt.personID WHERE p.name = ?', [username], async (err, results) => {
             if (results?.length > 0) {
                 const user = results[0];
+                const match = await bcrypt.compare(password, user.password);
                 if (match) {
-
+                    const token = jwt.sign({ userID: user.personID, userType: 'patient' }, secretKey, { expiresIn: '1h' });
                     const personID = user.personID;
                     res.status(200).json({ personID, token });
                 } else {
@@ -116,8 +131,9 @@ app.post('/checkLogin', (req, res) => {
             if (results?.length > 0) {
                 console.log(results)
                 const user = results[0];
+                const match = await bcrypt.compare(password, user.password);
                 if (match) {
-
+                    const token = jwt.sign({ userID: user.personID, userType: 'doctor' }, secretKey, { expiresIn: '1h' });
                     const personID = user.personID;
                     const specId = user.doctorID;
                     res.status(200).json({ personID, token, specId });
@@ -132,6 +148,7 @@ app.post('/checkLogin', (req, res) => {
         connection.query('SELECT * FROM persons p JOIN managers m ON p.personID = m.personID WHERE p.name = ? AND p.password = ?', [username, password], (err, results) => {
             if (results?.length > 0) {
                 const user = results[0];
+                const token = jwt.sign({ userID: user.personID, userType: 'admin' }, secretKey, { expiresIn: '1h' });
                 res.status(200).json({ user, token });
             } else {
                 res.status(401).json({ message: 'Invalid credentials' });
@@ -339,7 +356,10 @@ app.get('/checkToken', (req, res) => {
     const token = authHeader && authHeader.split(' ')[1];
     if (token == null) return res.sendStatus(401);
 
-
+    jwt.verify(token, secretKey, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Token expired' });
+        res.status(200).json({ message: 'Token valid' });
+    });
 });
 
 
