@@ -1,0 +1,8 @@
+{
+    "host": "sql.velnom.xyz",
+    "user": "root",
+    "password": "1436XYzt+++",
+    "database": "Hospital",
+    "port": "4444",
+    "secretKey": "nom"
+}
