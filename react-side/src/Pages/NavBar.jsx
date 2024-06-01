@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 function NavBar() {
     const navigate = useNavigate();
-
+    const userType = localStorage.getItem('userType');
     const location = useLocation();
     const currentPath = location.pathname;
     useEffect(() => {
@@ -54,7 +54,8 @@ function NavBar() {
                                 </li>
                                 <li className="navbar-item">
                                     <a onClick={() => {
-
+                                        localStorage.removeItem('userType');
+                                        localStorage.removeItem('token');
                                         navigate('/');
                                     }} className="navbar-link">Logout</a>
                                 </li>
@@ -74,7 +75,8 @@ function NavBar() {
                                 </li>
                                 <li className="navbar-item">
                                     <a onClick={() => {
-
+                                        localStorage.removeItem('userType');
+                                        localStorage.removeItem('token');
                                         navigate('/');
                                     }} className="navbar-link">Logout</a>
                                 </li>
@@ -94,7 +96,8 @@ function NavBar() {
                                 </li>
                                 <li className="navbar-item">
                                     <a onClick={() => {
-
+                                        localStorage.removeItem('userType');
+                                        localStorage.removeItem('token');
                                         navigate('/');
                                     }} className="navbar-link">Logout</a>
                                 </li>

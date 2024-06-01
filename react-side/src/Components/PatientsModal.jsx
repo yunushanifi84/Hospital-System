@@ -9,7 +9,7 @@ import ViewReportModal from './ViewReportModal';
 
 
 function PatientsModal({ modalfunc, patient }) {
-
+    const doctorId = localStorage.getItem('specID');
     console.log(patient)
     const patientId = patient.patientID;
     const [medicalReports, setMedicalReports] = useState([]);

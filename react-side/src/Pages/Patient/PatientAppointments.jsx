@@ -14,7 +14,8 @@ function PatientAppoinments() {
     const [effect, setEffect] = useState(false);
 
     useEffect(() => {
-
+        const personID = localStorage.getItem('personID')
+        const userType = localStorage.getItem('userType')
         axiosInstance.post(`/getMyAppointments`, { 'id': personID, 'userType': userType })
             .then(res => {
                 setMyAppointments(res.data.result);

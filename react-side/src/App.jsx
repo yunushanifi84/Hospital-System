@@ -8,13 +8,36 @@ import Patient from './Pages/Patient'
 import Doctor from './Pages/Doctor'
 import PrivateRoute from './PrivateRoute'
 import { useEffect } from 'react'
+import axiosInstance from './axiosInstance'
 function App() {
   useEffect(() => {
     const checkToken = async () => {
       console.log("döngü")
+      const token = localStorage.getItem('token');
       if (!token) return;
 
+      axiosInstance.get('/checkToken').then(res => {
+        console.log(res);
+        return;
+      }).catch(err => {
+        console.log(err);
+        localStorage.removeItem('token');
+      })
 
+      // try {
+      //   const response = await axios.get('/checkToken', {
+      //     headers: { Authorization: `Bearer ${token}` }
+      //   });
+      //   console.log(response)
+
+      //   if (response.status !== 200) {
+      //     localStorage.removeItem('token');
+      //   }
+      // } catch (error) {
+      //   if (error.response && error.response.status === 403) {
+      //     localStorage.removeItem('token');
+      //   }
+      // }
     };
 
     // Her 5 dakikada bir token'ın süresini kontrol et

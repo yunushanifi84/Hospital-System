@@ -20,7 +20,7 @@ function DoctorPatients() {
     const [doctorReportsModalState, setDoctorReportsModalState] = useState(false);
 
     useEffect(() => {
-
+        const personID = localStorage.getItem('personID');
         axiosInstance.post('/getMyPatients', { 'id': personID })
             .then((res) => {
                 console.log(res.data)
