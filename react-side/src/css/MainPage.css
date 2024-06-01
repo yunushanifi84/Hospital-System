@@ -1,0 +1,83 @@
+.MainPage {
+
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.MainPage-desc {
+    font-size: 30px;
+    font-family: 'Montserrat', sans-serif;
+    /* Font tipi */
+    color: #2c3e50;
+    /* Açık mavi veya yeşil tonlarına uygun renk */
+}
+
+
+.content {
+
+    margin-top: 1%;
+}
+
+body {
+    background-image: url('../../../../../../src/assets/back.webp');
+    /* Arka plan resmi */
+    background-size: 100% 100%;
+    /* Resmin ekran boyutuna oturacak şekilde boyutlandırılması */
+    background-repeat: no-repeat;
+    /* Resmin tekrarlanmaması */
+    background-attachment: fixed;
+    /* Resmin ekranla sabit kalması */
+}
+
+.main-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    display: block;
+}
+
+.main-button:hover {
+    background-color: #45a049;
+}
+
+MainPage-button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.MainPage-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    display: block;
+}
+
+.MainPage-button:hover {
+    background-color: #45a049;
+}
+
+.registerText {
+    cursor: pointer;
+    font-size: large;
+    margin-top: 0px;
+}
+
+.registerText:hover {
+    color: red;
+}
