@@ -1,0 +1,48 @@
+.navbar {
+    background-color: #f2f2f2;
+    /* Navbar background color (light gray) */
+    color: #333;
+    /* Navbar text color (dark gray) */
+    padding: 1rem;
+    /* Navbar padding */
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Vertically align items */
+}
+
+.navbar-logo {
+    color: #333;
+    /* Logo text color */
+    text-decoration: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.navbar-menu {
+    list-style: none;
+    display: flex;
+}
+
+.navbar-item {
+    margin-right: 1rem;
+}
+
+.navbar-link {
+    color: #333;
+    /* Default link color (dark gray) */
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s;
+    font-size: 1.2rem;
+    /* Increased font size */
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbar-link:hover {
+    color: #e74c3c;
+    /* Color on hover (shades of red) */
+}
