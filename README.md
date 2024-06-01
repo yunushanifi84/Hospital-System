@@ -2,8 +2,12 @@
 ## https://hospital.velnom.xyz/
 
 # To Install 
-## Docker compose up
-
+```console
+git clone https://github.com/yunushanifi84/Hospital-System.git
+```
+```docker
+docker compose up
+```
 # Users
 - Admin user login credentials:
   -admin
