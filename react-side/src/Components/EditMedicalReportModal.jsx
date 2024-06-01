@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import axiosInstance from '../axiosInstance';
 import { goFileUploadFolderId } from '../../config.json'
+import axios from 'axios';
 import { FadeLoader } from 'react-spinners'
 
 function EditMedicalReportModal({ report, modalfunc }) {
@@ -17,10 +19,38 @@ function EditMedicalReportModal({ report, modalfunc }) {
         formData.append("file", item);
         formData.append("folderId", goFileUploadFolderId);
 
+        axios.post('https://store10.gofile.io/contents/uploadfile', formData, {
+            headers: {
+                'Authorization': 'Bearer KOHEmxwonfmF3LtUJigY9aiePLis53jw',
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(response => {
+                const { fileId, fileName } = response.data.data;
+                setUploadedFileUrl(`https://store5.gofile.io/download/web/${fileId}/thumb_${fileName}`);
+                setUploading(false);
+            })
+            .catch(error => {
+                console.error(error);
+                setUploading(false);
+            });
     }
 
 
     const handleEditReport = () => {
+        const axiosData = {
+            'id': report.reportID,
+            'reportUrl': uploadedFileUrl
+        }
+        axiosInstance.post('/editMedicalReport', axiosData).then(res => {
+            if (res.data.status) {
+                alert("succsessfully updated");
+                modalfunc();
+            }
+        }).catch(err => {
+            alert("An error occured please try again later");
+            modalfunc();
+        })
     };
 
     return (

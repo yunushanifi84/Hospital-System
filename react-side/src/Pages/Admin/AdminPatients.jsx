@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Dashboard from '../../Components/Dashboard';
 import "../../css/AdminPatients.css";
 import AddPatientModal from '../../Components/AddPatientModal';
+import axiosInstance from '../../axiosInstance'
 import EditPatientModal from '../../Components/EditPatientModal';
 
 // Icon imports
@@ -18,6 +19,11 @@ function AdminPatients() {
     const [effect, updateEffect] = useState(false);
 
     useEffect(() => {
+        axiosInstance.get(`/getPatients`)
+            .then(res => {
+                setPatients(res.data.result);
+            })
+            .catch(err => console.log(err))
     }, [modalState, editModalState, effect])
 
     const lastIndex = currentPage * itemsPerPage;
@@ -38,6 +44,15 @@ function AdminPatients() {
     };
 
     const handleDelete = (id) => {
+        axiosInstance.post(`/deletePatient`, { id: id })
+            .then(res => {
+                if (res.data.result && res.data.result.affectedRows > 0) {
+                    alert('Kişi Başarıyla silindi.');
+                    updateEffect(!effect);
+                } else if (res.data.message) {
+                    alert(res.data.message.sqlMessage)
+                }
+            })
     };
 
     return (

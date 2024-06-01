@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../css/AddPatientModal.css';
 import { host, port } from '../../config.json';
 import Select from 'react-select';
-
+import axiosInstance from '../axiosInstance'
 
 function AddPatientModal({ modalfunc }) {
     const [name, setName] = useState('');
@@ -14,7 +14,20 @@ function AddPatientModal({ modalfunc }) {
     const [address, setAddress] = useState('');
 
     const addPatient = () => {
-
+        axiosInstance.post(`/addPatient`, {
+            name: name,
+            birthDate: birthDate,
+            surName: surName,
+            password: password,
+            gender: gender,
+            phoneNumber: phoneNumber,
+            address: address
+        }).then(res => {
+            if (res.data.status === "ok") {
+                alert("Add process succsessful.");
+                modalfunc();
+            }
+        });
     };
 
     const genderOptions = [

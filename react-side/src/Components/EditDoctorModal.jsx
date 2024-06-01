@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import axiosInstance from '../axiosInstance';
 import '../css/EditDoctorModal.css';
 
 function EditDoctorModal({ doctor, modalfunc }) {
@@ -14,7 +14,10 @@ function EditDoctorModal({ doctor, modalfunc }) {
     };
 
     const handleSubmit = () => {
-
+        axiosInstance.post(`/editDoctor`, { editedDoctor }).then((res) => {
+            alert("Informations succsessfully updated.");
+            modalfunc(); // Modalı kapat
+        });
     };
 
     return (

@@ -1,7 +1,7 @@
 import Dashboard from '../../Components/Dashboard';
 import React, { useState, useEffect } from 'react';
 //import "../../css/PatientMedicalReports.css";
-
+import axiosInstance from '../../axiosInstance';
 
 //icons
 import { BiShow } from "react-icons/bi";
@@ -20,7 +20,13 @@ function PatientMedicalReports() {
 
     useEffect(() => {
 
-
+        axiosInstance.post('/getPatientMedicalReports', { 'id': personID })
+            .then((res) => {
+                console.log(res.data)
+                if (res.data.results.length > 0)
+                    setMedicalReports(res.data.results);
+            })
+            .catch(err => console.log(err));
     }, [addModalState]);
 
     const lastIndex = currentPage * itemsPerPage;
@@ -39,7 +45,15 @@ function PatientMedicalReports() {
         setAddModalState(!addModalState);
     };
     const handleDelete = (id) => {
-
+        axiosInstance.post(`/deleteMedicalReport`, { id: id })
+            .then(res => {
+                if (res.data.result && res.data.result.affectedRows > 0) {
+                    alert('Rapor başarıyla silindi.');
+                    setEffect(!effect);
+                } else if (res.data.message) {
+                    alert(res.data.message.sqlMessage)
+                }
+            })
 
     }
 
