@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import '../css/RegisterContainer.css'
 import { host, port } from '../../config.json';
+import axios from 'axios';
 
 
 
@@ -16,6 +17,19 @@ function RegisterContainer() {
 
 
     const CreateAnAccount = () => {
+        axios.post(`${host}:${port}/registerPatient`, {
+            name: name,
+            birthDate: birthDate,
+            surName: surName,
+            password: password,
+            gender: gender,
+            phoneNumber: phoneNumber,
+            address: address
+        }).then(res => {
+            if (res.data.status == "ok") {
+                alert("Registarion status succsess");
+            }
+        })
     };
 
     return (

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
+import axiosInstance from '../axiosInstance';
+import axios from 'axios';
 import { goFileUploadFolderId } from '../../config.json';
 
 function AddMedicalReportModal({ modalfunc, patient }) {
-
     const [doctorId, setDoctorId] = useState(userType === 'doctor' ? personID : '');
     const [patientId, setPatientId] = useState(userType === 'patient' ? personID : '');
     const [patients, setPatients] = useState([]);
@@ -17,11 +18,33 @@ function AddMedicalReportModal({ modalfunc, patient }) {
             setPatientId(patient.personId);
         }
         if (userType !== 'doctor') {
-
+            axiosInstance.get(`/getDoctors`)
+                .then(res => {
+                    if (res.data.result) {
+                        setDoctors(res.data.result);
+                    } else {
+                        alert("An error occurred while fetching doctors.");
+                    }
+                })
+                .catch(err => {
+                    console.error("Error fetching doctors:", err);
+                    alert("An error occurred while fetching doctors.");
+                });
         }
 
         if (userType !== 'doctor' && userType !== 'patient') {
-
+            axiosInstance.get(`/getPatients`)
+                .then(res => {
+                    if (res.data.result) {
+                        setPatients(res.data.result);
+                    } else {
+                        alert("An error occurred while fetching patients.");
+                    }
+                })
+                .catch(err => {
+                    console.error("Error fetching patients:", err);
+                    alert("An error occurred while fetching patients.");
+                });
         }
     }, [userType]);
 
@@ -49,7 +72,21 @@ function AddMedicalReportModal({ modalfunc, patient }) {
         formData.append("file", item);
         formData.append("folderId", goFileUploadFolderId);
 
-
+        axios.post('https://store10.gofile.io/contents/uploadfile', formData, {
+            headers: {
+                'Authorization': 'Bearer KOHEmxwonfmF3LtUJigY9aiePLis53jw',
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(response => {
+                const { fileId, fileName } = response.data.data;
+                setUploadedFileUrl(`https://store5.gofile.io/download/web/${fileId}/thumb_${fileName}`);
+                setUploading(false);
+            })
+            .catch(error => {
+                console.error(error);
+                setUploading(false);
+            });
     }
 
     let count = 0;
@@ -65,6 +102,22 @@ function AddMedicalReportModal({ modalfunc, patient }) {
             return;
         }
 
+        const axiosData = {
+            'patientID': parseInt(patientId),
+            'doctorID': parseInt(doctorId),
+            'reportUrl': uploadedFileUrl
+        }
+        console.log(axiosData)
+        axiosInstance.post('/addMedicalReport', axiosData).then(res => {
+            if (res.data.status) {
+                alert("Medical Report successfully added.");
+                modalfunc();
+            }
+        }).catch(err => {
+            console.log(err);
+            alert(err);
+            modalfunc();
+        });
     }
 
     return (

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/AddAppointmentModal.css';
+import axiosInstance from '../axiosInstance';
 import Select from 'react-select';
 
 function AddAppointmentModal({ modalfunc }) {
@@ -19,18 +20,76 @@ function AddAppointmentModal({ modalfunc }) {
 
 
     useEffect(() => {
+        axiosInstance.get(`/getDoctors`)
+            .then(res => {
+                if (res.data.result) {
+
+                    setDoctors(res.data.result);
+                } else {
+                    alert("An error occurred while fetching doctors.");
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching doctors:", err);
+                alert("An error occurred while fetching doctors.");
+            });
+
+        axiosInstance.get(`/getPatients`)
+            .then(res => {
+                if (res.data.result) {
+                    setPatients(res.data.result);
+
+                } else {
+                    alert("An error occurred while fetching patients.");
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching patients:", err);
+                alert("An error occurred while fetching patients.");
+            });
+
 
 
     }, []);
 
     useEffect(() => {
+        axiosInstance.get(`/getSpec`)
+            .then(res => {
+                if (res.data.result) {
 
+                    setSpec(res.data.result);
+                } else {
+                    alert("An error occurred while fetching specs.");
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching specs:", err);
+                alert("An error occurred while fetching specs.");
+            });
 
 
 
     }, [selectedSpec])
     useEffect(() => {
         if (selectedSpec) {
+            axiosInstance.post(`/getDoctorInfoForSpec`, { 'selectedSpec': selectedSpec })
+                .then(res => {
+                    if (res.data.result) {
+                        console.log(res.data.result)
+                        const newSpecDoctorOptions = res.data.result.map((specDoctor) => ({
+                            value: specDoctor.personID,
+                            label: specDoctor.name
+                        }));
+                        setSpecDoctorOptions(newSpecDoctorOptions);
+                        setDoctorInfoForSpec(res.data.result);
+                    } else {
+                        alert("An error occurred while fetching specs.");
+                    }
+                })
+                .catch(err => {
+                    console.error("Error fetching specs:", err);
+                    alert("An error occurred while fetching specs.");
+                });
         }
 
     }, [selectedSpec])
@@ -49,7 +108,19 @@ function AddAppointmentModal({ modalfunc }) {
             patientPersonID: patientPersonID
         };
 
-
+        axiosInstance.post(`/addAppointment`, newAppointment)
+            .then(res => {
+                if (res.data.status === "ok") {
+                    alert("Appointment added successfully.");
+                    modalfunc();
+                } else {
+                    alert("An error occurred while adding the appointment.");
+                }
+            })
+            .catch(err => {
+                console.error("Error adding appointment:", err);
+                alert("An error occurred while adding the appointment.");
+            });
     };
 
     const handleDateTimeChange = (e) => {

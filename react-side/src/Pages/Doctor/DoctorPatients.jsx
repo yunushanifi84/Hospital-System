@@ -1,7 +1,7 @@
 import Dashboard from '../../Components/Dashboard';
 import React, { useState, useEffect } from 'react';
 //import "../../css/DoctorPatients.css";
-
+import axiosInstance from '../../axiosInstance';
 
 //icons
 import { BiShow } from "react-icons/bi";
@@ -21,7 +21,14 @@ function DoctorPatients() {
 
     useEffect(() => {
 
-
+        axiosInstance.post('/getMyPatients', { 'id': personID })
+            .then((res) => {
+                console.log(res.data)
+                if (res.data.result.length > 0)
+                    setMedicalReports(res.data.result);
+                console.log(medicalReports)
+            })
+            .catch(err => console.log(err));
     }, [addModalState]);
 
     const lastIndex = currentPage * itemsPerPage;

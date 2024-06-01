@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import "../../css/AdminMedicalReports.css";
-
+import axiosInstance from '../../axiosInstance';
 
 //icons
 import { BiShow } from "react-icons/bi";
@@ -26,6 +26,12 @@ function AdminMedicalReports() {
 
     useEffect(() => {
 
+        axiosInstance.post('/getMedicalReports')
+            .then((res) => {
+                console.log(res)
+                setMedicalReports(res.data.result);
+            })
+            .catch(err => console.log(err))
     }, [ViewReportModal, addReportModalState, effect, editModalState])
 
     const lastIndex = currentPage * itemsPerPage;
@@ -47,6 +53,15 @@ function AdminMedicalReports() {
     };
 
     const handleDelete = (id) => {
+        axiosInstance.post(`/deleteMedicalReport`, { id: id })
+            .then(res => {
+                if (res.data.result && res.data.result.affectedRows > 0) {
+                    alert('Rapor başarıyla silindi.');
+                    updateEffect(!effect);
+                } else if (res.data.message) {
+                    alert(res.data.message.sqlMessage)
+                }
+            })
 
     }
 

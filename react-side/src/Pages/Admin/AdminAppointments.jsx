@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Dashboard from '../../Components/Dashboard';
+import axiosInstance from '../../axiosInstance';
 import AddAppointmentModal from '../../Components/AddAppointmentModal';
 import { MdDelete } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
@@ -15,7 +16,10 @@ function AdminAppointments() {
     const [effect, updateEffect] = useState(false);
 
     useEffect(() => {
-
+        axiosInstance.get(`/getAppointments`).then(res => {
+            console.log(res.data);
+            setAppointments(res.data.result);
+        });
     }, [addModalState, effect, editModalState]);
 
     const handleClick = (event) => {
@@ -31,6 +35,15 @@ function AdminAppointments() {
     };
 
     const handleDelete = (id) => {
+        axiosInstance.post(`/deleteAppointment`, { id: id })
+            .then(res => {
+                if (res.data.result && res.data.result.affectedRows > 0) {
+                    alert('Appointment successfully deleted.');
+                    updateEffect(!effect);
+                } else if (res.data.message) {
+                    alert(res.data.message.sqlMessage);
+                }
+            });
     };
 
     const lastIndex = currentPage * itemsPerPage;

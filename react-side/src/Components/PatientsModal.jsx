@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axiosInstance from '../axiosInstance';
 import { BiShow } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import '../css/PatientsModal.css';
@@ -20,6 +21,13 @@ function PatientsModal({ modalfunc, patient }) {
     const [effect, setEffect] = useState(false);
 
     useEffect(() => {
+        axiosInstance.post('/getPatientMedicalReports', { 'patientId': patientId })
+            .then((res) => {
+                console.log(res.data)
+                if (res.data.results.length > 0)
+                    setMedicalReports(res.data.results);
+            })
+            .catch(err => console.log(err));
 
 
 
@@ -37,6 +45,15 @@ function PatientsModal({ modalfunc, patient }) {
     }
 
     const handleDelete = (id) => {
+        axiosInstance.post(`/deleteMedicalReport`, { id: id })
+            .then(res => {
+                if (res.data.result && res.data.result.affectedRows > 0) {
+                    alert('Rapor başarıyla silindi.');
+                    setEffect(!effect);
+                } else if (res.data.message) {
+                    alert(res.data.message.sqlMessage)
+                }
+            })
 
     }
 

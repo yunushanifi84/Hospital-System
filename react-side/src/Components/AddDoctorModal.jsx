@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { host, port } from '../../config.json';
 import '../css/AddDoctorModal.css';
+import axiosInstance from '../axiosInstance'
 function AddDoctorModal({ modalfunc }) {
     const [name, setName] = useState('');
     const [surName, setSurName] = useState('');
@@ -9,7 +10,18 @@ function AddDoctorModal({ modalfunc }) {
     const [hospital, setHospital] = useState('');
 
     const addDoctor = () => {
-
+        axiosInstance.post(`/addDoctor`, {
+            name: name,
+            surName: surName,
+            password: password,
+            specialization: specialization,
+            hospital: hospital
+        }).then(res => {
+            if (res.data.status === "ok") {
+                alert("Doctor successfully added.");
+                modalfunc();
+            }
+        });
     };
 
     return (

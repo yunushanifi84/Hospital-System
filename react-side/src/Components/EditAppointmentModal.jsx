@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import axiosInstance from '../axiosInstance';
 import Select from 'react-select';
 import '../css/EditAppointmentModal.css';
 
@@ -9,14 +9,42 @@ function EditAppointmentModal({ appointment, modalfunc }) {
     const [patients, setPatients] = useState([]);
 
     useEffect(() => {
+        axiosInstance.get(`/getDoctors`)
+            .then(res => {
+                if (res.data.result) {
+                    setDoctors(res.data.result);
+                } else {
+                    alert("An error occurred while fetching doctors.");
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching doctors:", err);
+                alert("An error occurred while fetching doctors.");
+            });
 
+        axiosInstance.get(`/getPatients`)
+            .then(res => {
+                if (res.data.result) {
+                    setPatients(res.data.result);
+                } else {
+                    alert("An error occurred while fetching patients.");
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching patients:", err);
+                alert("An error occurred while fetching patients.");
+            });
 
     }, []);
 
 
 
     const handleSubmit = () => {
-
+        console.log(editedAppointment);
+        axiosInstance.post('/editAppointment', { editedAppointment }).then(() => {
+            alert('Informations succsessfully updated.');
+            modalfunc();
+        });
     };
     const handleDateTimeChange = (e) => {
         const selectedDateTime = new Date(e.target.value);

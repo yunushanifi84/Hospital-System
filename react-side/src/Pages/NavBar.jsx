@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 function NavBar() {
     const navigate = useNavigate();
+
     const location = useLocation();
     const currentPath = location.pathname;
     useEffect(() => {
