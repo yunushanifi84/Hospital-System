@@ -1,7 +1,7 @@
 # Easy Access for preview
 ## https://hospital.velnom.xyz/
 
-#To Install 
+# To Install 
 ## Docker compose up
 
 # Users
