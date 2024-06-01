@@ -14,7 +14,7 @@ function Admin() {
 
     //kullanıcı filtresi
     useEffect(() => {
-
+        const userType = localStorage.getItem('userType');
 
         if (userType !== 'admin') {
             navigate('/error'); // Doğru yönlendirme fonksiyonunu kullanmalısınız.

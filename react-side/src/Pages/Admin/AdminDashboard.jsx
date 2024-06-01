@@ -17,3 +17,7 @@ function AdminDashboard() {
 
 export default AdminDashboard
 
+
+{/* <div className='dashboard-total-patients'>
+                Total Patients
+            </div> */}

@@ -11,7 +11,7 @@ function Doctor() {
 
     //kullanıcı filtresi
     useEffect(() => {
-
+        const userType = localStorage.getItem('userType');
         if (userType != 'doctor') navigation('/error');
 
         switch (location.pathname) {

@@ -4,6 +4,8 @@ import axiosInstance from '../axiosInstance';
 import Select from 'react-select';
 
 function AddAppointmentModal({ modalfunc }) {
+    const userType = localStorage.getItem('userType');
+    const personID = localStorage.getItem('personID');
     const [appointmentDateTime, setAppointmentDateTime] = useState('');
     const [doctorPersonID, setDoctorPersonId] = useState(personID);
     const [patientPersonID, setPatientPersonId] = useState(personID);

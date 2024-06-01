@@ -13,7 +13,8 @@ function Patient() {
 
     //kullanıcı filtresi
     useEffect(() => {
-
+        const user = localStorage.getItem('user');
+        const userType = localStorage.getItem('userType');
         if (userType != 'patient') navigate('/error');
         switch (location.pathname) {
             case '/patient':

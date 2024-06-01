@@ -5,6 +5,8 @@ import axios from 'axios';
 import { goFileUploadFolderId } from '../../config.json';
 
 function AddMedicalReportModal({ modalfunc, patient }) {
+    const userType = localStorage.getItem('userType');
+    const personID = localStorage.getItem('personID');
     const [doctorId, setDoctorId] = useState(userType === 'doctor' ? personID : '');
     const [patientId, setPatientId] = useState(userType === 'patient' ? personID : '');
     const [patients, setPatients] = useState([]);
