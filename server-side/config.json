@@ -1,7 +1,7 @@
 {
-    "host": "sql.velnom.xyz",
+    "host": "mysql",
     "user": "root",
-    "password": "1436XYzt+++",
+    "password": "rootpassword",
     "database": "Hospital",
     "port": "4444",
     "secretKey": "nom"

@@ -112,7 +112,7 @@ app.post('/checkLogin', (req, res) => {
     const { username, password, userType } = req.body;
 
     if (userType === 'patient') {
-        connection.query('SELECT * FROM persons p JOIN patients pt ON p.personID = pt.personID WHERE p.name = ?', [username], async (err, results) => {
+        connection.query('SELECT * FROM Persons p JOIN Patients pt ON p.personID = pt.personID WHERE p.name = ?', [username], async (err, results) => {
             if (results?.length > 0) {
                 const user = results[0];
                 const match = await bcrypt.compare(password, user.password);
@@ -128,7 +128,7 @@ app.post('/checkLogin', (req, res) => {
             }
         });
     } else if (userType === 'doctor') {
-        connection.query('SELECT * FROM persons p JOIN doctors d ON p.personID = d.personID WHERE p.name = ?', [username], async (err, results) => {
+        connection.query('SELECT * FROM Persons p JOIN Doctors d ON p.personID = d.personID WHERE p.name = ?', [username], async (err, results) => {
             if (results?.length > 0) {
                 console.log(results)
                 const user = results[0];
@@ -146,11 +146,12 @@ app.post('/checkLogin', (req, res) => {
             }
         });
     } else if (userType === 'admin') {
-        connection.query('SELECT * FROM persons p JOIN managers m ON p.personID = m.personID WHERE p.name = ? AND p.password = ?', [username, password], (err, results) => {
+        connection.query('SELECT * FROM Persons p JOIN Managers m ON p.personID = m.personID WHERE p.name = ? AND p.password = ?', [username, password], (err, results) => {
             if (results?.length > 0) {
                 const user = results[0];
                 const token = jwt.sign({ userID: user.personID, userType: 'admin' }, secretKey, { expiresIn: '1h' });
-                res.status(200).json({ user, token });
+                const personID = user.personID;
+                res.status(200).json({ personID, token });
             } else {
                 res.status(401).json({ message: 'Invalid credentials' });
             }
